@@ -3,8 +3,13 @@
 	margin: 50px 60px;
 }
 
+.card-hover {
+	box-shadow: 5px 5px 5px grey;
+}
+
 .contact-list {
 	float: left;
 	margin: 20px;
 	
 }
+

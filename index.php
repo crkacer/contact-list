@@ -17,7 +17,7 @@
     </div>
   </div>
 <div class="contact-list">	
-	<div class="card" style="width: 20rem;">
+	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
 	  <img class="card-img-top" src="./assets/img/1.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
 	  <div class="card-body">
 	    <h4 class="card-title">Mr. Chairman</h4>
@@ -33,7 +33,7 @@
 	  </div>
 	</div>
 
-	<div class="card" style="width: 20rem;">
+	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
 	  <img class="card-img-top" src="./assets/img/2.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
 	  <div class="card-body">
 	    <h4 class="card-title">Mr. Chairman</h4>
@@ -49,7 +49,7 @@
 	  </div>
 	</div>
 
-	<div class="card" style="width: 20rem;">
+	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
 	  <img class="card-img-top" src="./assets/img/3.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
 	  <div class="card-body">
 	    <h4 class="card-title">Mr. Chairman</h4>
@@ -65,7 +65,7 @@
 	  </div>
 	</div>
 
-	<div class="card" style="width: 20rem;">
+	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
 	  <img class="card-img-top" src="./assets/img/4.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
 	  <div class="card-body">
 	    <h4 class="card-title">Mr. Chairman</h4>
@@ -90,7 +90,12 @@
 	var vm = new Vue({
 		el: '#app',
 		data: {
-			test: 200
+			test: 200,
+			hoverCard: false,
+			hoverClass: "card"
+		},
+		computed: {
+			
 		},
 		methods: {
 			testingMethod: function() {
@@ -98,6 +103,16 @@
 			},
 			openAdd: function() {
 				window.location.href="/add.php";
+			},
+			mouseOver: function() {
+				this.hoverCard = !this.hoverCard;
+
+			},
+			hoverCls: function() {
+				if (this.hoverClass) {
+					return "card card-hover";
+				}
+				return "card";
 			}
 		}
 	});
