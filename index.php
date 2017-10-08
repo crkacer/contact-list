@@ -5,6 +5,26 @@
 <ul class="breadcrumb">
   <li class="active">Home</li>
 </ul>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close button-close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Woohoo, you're reading this text in a modal!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <h2 class="display-4">All Contacts</h2>
 <div id="app">
 <button @click="openAdd" type="button" class="btn btn-light">Create a new Contact</button>	
@@ -29,7 +49,7 @@
 	  </ul>
 	  <div class="card-body">
 	    <a href="/edit.php?id=200" class="card-link">Update link</a>
-	    <a href="#" class="card-link">Delete link</a>
+	    <a href="#" class="card-link" data-toggle="modal" data-target="#exampleModal">Delete link</a>
 	  </div>
 	</div>
 
