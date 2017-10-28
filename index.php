@@ -1,105 +1,85 @@
-<?php 
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 	include('header.php');
+	include('functions.php');
  ?>
+
  <div class="container">
 <ul class="breadcrumb">
   <li class="active">Home</li>
 </ul>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close button-close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        Woohoo, you're reading this text in a modal!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 <h2 class="display-4">All Contacts</h2>
 <div id="app">
-<button @click="openAdd" type="button" class="btn btn-light">Create a new Contact</button>	
-<div class="col-lg-6">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
-      <span class="input-group-btn">
-        <button class="btn btn-secondary" type="button">Go!</button>
-      </span>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete contact:</h5>
+                    <button type="button" class="close button-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure to delete the contact?
+                </div>
+                <div class="modal-footer">
+                    <button @click="confirmDelete" type="button" class="btn btn-primary">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <!--  End Modal  -->
+
+<button @click="openAdd" type="button" class="btn btn-light" style="margin-bottom: 30px;">Create a new Contact</button>
+<div class="col-lg-6">
+    <form action="search.php" method="POST">
+        <div class="input-group">
+          <input type="text" class="form-control" name="value" placeholder="Search for..." aria-label="Search for...">
+          <span class="input-group-btn">
+            <input class="btn btn-secondary" type="submit" value="Search!"/>
+          </span>
+        </div>
+    </form>
   </div>
-<div class="contact-list">	
-	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
-	  <img class="card-img-top" src="./assets/img/1.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
-	  <div class="card-body">
-	    <h4 class="card-title">Mr. Chairman</h4>
-	  </div>
-	  <ul class="list-group list-group-flush">
-	    <li class="list-group-item">John</li>
-	    <li class="list-group-item">Kenedy</li>
-	    <li class="list-group-item">john.kenedy@hotmail.com</li>
-	  </ul>
-	  <div class="card-body">
-	    <a href="/edit.php?id=200" class="card-link">Update link</a>
-	    <a href="#" class="card-link" data-toggle="modal" data-target="#exampleModal">Delete link</a>
-	  </div>
-	</div>
+<div class="contact-list" style="padding: 30px;">
+    <?php
+    // Read the text file and render data
+    $content = readRecords();
+    if (count($content) > 0) {
 
-	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
-	  <img class="card-img-top" src="./assets/img/2.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
+        foreach ($content as $c) { ?>
+            <div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" :class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem; float: left;">
+	  <img class="card-img-top" src="<?php echo $c['location']; ?>" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
 	  <div class="card-body">
-	    <h4 class="card-title">Mr. Chairman</h4>
+	    <h4 class="card-title">
+            <?php echo $c['title']; ?>
+        </h4>
 	  </div>
 	  <ul class="list-group list-group-flush">
-	    <li class="list-group-item">John</li>
-	    <li class="list-group-item">Kenedy</li>
-	    <li class="list-group-item">john.kenedy@hotmail.com</li>
+	    <li class="list-group-item">
+            <?php echo $c['fname']; ?>
+        </li>
+	    <li class="list-group-item">
+            <?php echo $c['lname']; ?>
+        </li>
+	    <li class="list-group-item">
+            <?php echo $c['email']; ?>
+        </li>
 	  </ul>
 	  <div class="card-body">
-	    <a href="/edit.php?id=200" class="card-link">Update link</a>
-	    <a href="#" class="card-link">Delete link</a>
+	    <a href="/edit.php?id=<?php echo $c['id']; ?>" class="card-link">Update link</a>
+	    <a href="#" id="<?php echo $c['id']; ?>" class="card-link" @click="deleteContact" data-toggle="modal" data-target="#exampleModal">Delete link</a>
 	  </div>
 	</div>
-
-	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
-	  <img class="card-img-top" src="./assets/img/3.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
-	  <div class="card-body">
-	    <h4 class="card-title">Mr. Chairman</h4>
-	  </div>
-	  <ul class="list-group list-group-flush">
-	    <li class="list-group-item">John</li>
-	    <li class="list-group-item">Kenedy</li>
-	    <li class="list-group-item">john.kenedy@hotmail.com</li>
-	  </ul>
-	  <div class="card-body">
-	    <a href="/edit.php?id=200" class="card-link">Update link</a>
-	    <a href="#" class="card-link">Delete link</a>
-	  </div>
-	</div>
-
-	<div v-on:mouseover="mouseOver" v-on:mouseout="mouseOver" v-bind:class="{'card': !hoverCard, 'card card-hover': hoverCard}" style="width: 20rem;">
-	  <img class="card-img-top" src="./assets/img/4.jpg" alt="photo" style='height: 100%; width: 100%; object-fit: contain'>
-	  <div class="card-body">
-	    <h4 class="card-title">Mr. Chairman</h4>
-	  </div>
-	  <ul class="list-group list-group-flush">
-	    <li class="list-group-item">John</li>
-	    <li class="list-group-item">Kenedy</li>
-	    <li class="list-group-item">john.kenedy@hotmail.com</li>
-	  </ul>
-	  <div class="card-body">
-	    <a href="/edit.php?id=200" class="card-link">Update link</a>
-	    <a href="#" class="card-link">Delete link</a>
-	  </div>
-	</div>
+    <?php
+        }
+    }
+    ?>
 
 
 </div>
@@ -112,7 +92,8 @@
 		data: {
 			test: 200,
 			hoverCard: false,
-			hoverClass: "card"
+			hoverClass: "card",
+            deleteID: null,
 		},
 		computed: {
 			
@@ -133,7 +114,15 @@
 					return "card card-hover";
 				}
 				return "card";
-			}
+			},
+            deleteContact: function(event) {
+			    this.deleteID = event.path[0].id
+            },
+            confirmDelete: function () {
+                window.location.href = '/delete.php?id=' + this.deleteID;
+//                console.log(1);
+            }
+
 		}
 	});
 </script>
