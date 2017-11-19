@@ -41,16 +41,17 @@ function writeRecords($data) {
             $arrContact = [];
             array_push($arrContact, [
                 'id' => $data['id'],
-                'location' => $data['location'],
-                'title' => $data['title'],
-                'fname' => $data['fname'],
-                'lname' => $data['lname'],
-                'email' => $data['email']
+                'location' => (isset($data['location']) ? $data['location'] : ''),
+                'title' => (isset($data['title']) ? $data['title'] : ''),
+                'fname' => (isset($data['fname']) ? $data['fname'] : ''),
+                'lname' => (isset($data['lname']) ? $data['lname'] : ''),
+                'email' => (isset($data['email']) ? $data['email'] : '')
             ]);
 
             file_put_contents(FILE_NAME, serialize($arrContact));
 
             fclose($file);
+            return true;
         }
 
     } else {
@@ -65,11 +66,11 @@ function writeRecords($data) {
             }
             array_push($arrContact, [
                 'id' => $data['id'],
-                'location' => $data['location'],
-                'title' => $data['title'],
-                'fname' => $data['fname'],
-                'lname' => $data['lname'],
-                'email' => $data['email']
+                'location' => (isset($data['location']) ? $data['location'] : ''),
+                'title' => (isset($data['title']) ? $data['title'] : ''),
+                'fname' => (isset($data['fname']) ? $data['fname'] : ''),
+                'lname' => (isset($data['lname']) ? $data['lname'] : ''),
+                'email' => (isset($data['email']) ? $data['email'] : '')
             ]);
 
             file_put_contents(FILE_NAME, serialize($arrContact));
@@ -77,6 +78,7 @@ function writeRecords($data) {
             return true;
         }
     }
+    return false;
 
 }
 
@@ -92,11 +94,11 @@ function updateRecords($data) {
 
             $arrContact = unserialize($content);
             $k = $data['position'];
-            $arrContact[$k]['location'] = $data['location'];
-            $arrContact[$k]['fname'] = $data['fname'];
-            $arrContact[$k]['lname'] = $data['lname'];
-            $arrContact[$k]['email'] = $data['email'];
-            $arrContact[$k]['title'] = $data['title'];
+            $arrContact[$k]['location'] = (isset($data['location']) ? $data['location'] : $arrContact[$k]['location']);
+            $arrContact[$k]['fname'] = (isset($data['fname']) ? $data['fname'] : $arrContact[$k]['fname']);
+            $arrContact[$k]['lname'] = (isset($data['lname']) ? $data['lname'] : $arrContact[$k]['lname']);
+            $arrContact[$k]['email'] = (isset($data['email']) ? $data['email'] : $arrContact[$k]['email']);
+            $arrContact[$k]['title'] = (isset($data['title']) ? $data['title'] : $arrContact[$k]['title']);
 
             file_put_contents(FILE_NAME, serialize($arrContact));
             fclose($file);
@@ -133,7 +135,7 @@ function uploadImage($dir, $file) {
     } else {
 
         if (move_uploaded_file($_FILES[$file]["tmp_name"], $target_file)) {
-            echo "The file ". basename( $_FILES[$file]["name"]). " has been uploaded.";
+            // echo "The file ". basename( $_FILES[$file]["name"]). " has been uploaded.";
             return true;
         } else {
             echo "Sorry, there was an error uploading your file.";

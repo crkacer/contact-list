@@ -8,7 +8,7 @@
 			</div>
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				<div class="design">
-					 Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+					 Licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
 				</div>
 			</div>
 		</div>

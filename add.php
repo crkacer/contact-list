@@ -13,15 +13,18 @@
       }
       $target_file = $target_dir . "/". basename($_FILES["avatar"]["name"]);
 
-      uploadImage($target_dir, "avatar");
-      writeRecords([
-        'id' => "/assets/img/uploads/". $currentTime. "/". basename($_FILES["avatar"]["name"]),
-        'location' => $target_file,
+      $okUpload = uploadImage($target_dir, "avatar");
+      $okWrite = writeRecords([
+        'id' => $currentTime,
+        'location' => "/assets/img/uploads/". $currentTime. "/". basename($_FILES["avatar"]["name"]),
         'title' => $_POST['title'],
         'fname' => $_POST['fname'],
         'lname' => $_POST['lname'],
         'email' => $_POST['email']
-      ]);
+	  ]);
+	  if ($okUpload && $okWrite) {
+		//   header('Location: index.php');
+	  }
   }
   
   ?>
@@ -75,9 +78,7 @@
 </div>
 
 <script type="text/javascript">
-    $(document).on('ready', function() {
-        $("#input-b5").fileinput({showCaption: false});
-    });
+    
 </script>
 <?php 
 	include('footer.php');

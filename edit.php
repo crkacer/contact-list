@@ -26,9 +26,15 @@
 
         // overwrite the existing contact
         if ($p != -1) {
-            $currentTime = date('YmdGis');
-            $target_file = "./img/uploads/". $currentTime . "/". basename($_FILES["avatar"]["name"]);
-            uploadImage($currentTime, $_FILES["avatar"]);
+            
+            $target_file = $data[$p]['location'];
+
+            if (is_uploaded_file($_FILES['avatar']['tmp_name'])) {
+                $target_dir = realpath(dirname(__FILE__)) . "/assets/img/uploads/". $_POST['id'];
+                $target_file = "/assets/img/uploads/". $_POST['id'] . "/". basename($_FILES["avatar"]["name"]);
+                uploadImage($target_dir, "avatar");
+
+            }
             $ok = updateRecords([
                 'position' => $p,
                 'location' => $target_file,
@@ -37,12 +43,34 @@
                 'lname' => $_POST['lname'],
                 'email' => $_POST['email']
             ]);
-            header("/edit.php?id=". $contactID);
         }
     }
 
     if (isset($_GET['id'])) { ?>
-        <div class="container">
+        <div class="container" id="app">
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete contact:</h5>
+                            <button type="button" class="close button-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure to delete the contact?
+                        </div>
+                        <div class="modal-footer">
+                            <button @click="confirmDelete" type="button" class="btn btn-primary">Delete</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--  End Modal  -->
+
+
             <ul class="breadcrumb">
                 <li><a href="/">Home</a></li>
                 <li class="active">Edit <?php echo "- ". $data[$k]['fname']. " ". $data[$k]['lname']; ?></li>
@@ -80,19 +108,37 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label">Select File</label>
-                    <input id="input-b5" name="avatar" type="file" multiple value="<?php echo $data[$k]['location'] ?>">
+                    <img class="card-img-top" src="<?php echo $data[$k]['location']; ?>" alt="photo" style="height: 198px; width: 198px; object-fit: contain" >
+                    <input id="input-b5" name="avatar" type="file" multiple>
                 </div>
 
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" value="Update">
-                    <input type="button" class="btn btn-danger" value="Delete">
+                    <a href="#" id="<?php echo $data[$k]['id']; ?>" class="card-link btn btn-danger" @click="deleteContact" data-toggle="modal" data-target="#exampleModal">Delete</a>
                 </div>
 
             </form>
         </div>
 
 <?php } ?>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            deleteID: null,
+        },
+        methods: {
+            deleteContact: function(event) {
+                this.deleteID = event.path[0].id
+            },
+
+            confirmDelete: function () {
+                window.location.href = '/delete.php?id=' + this.deleteID;
+            }
+        }
+    });
+</script>
 
 <?php 
 	include('footer.php');
