@@ -31,13 +31,16 @@ if (count($_POST) > 0) {
         $target_file = $data[$p]['location'];
 
         if (file_exists($_FILES['avatar']['tmp_name'])) {
-            $target_dir = realpath(dirname(__FILE__)) . "/assets/img/uploads/" . $_POST['id'];
-            if (!file_exists($target_dir)) {
-                mkdir($target_dir, 0755, true);
+            $name = $_FILES["avatar"]["name"];
+            $ext = end((explode(".", $name)));
+            if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "ico") {
+                $target_dir = realpath(dirname(__FILE__)) . "/assets/img/uploads/" . $_POST['id'];
+                if (!file_exists($target_dir)) {
+                    mkdir($target_dir, 0755, true);
+                }
+                $target_file = "assets/img/uploads/" . $_POST['id'] . "/" . basename($_FILES["avatar"]["name"]);
+                uploadImage($target_dir, "avatar");
             }
-            $target_file = "/assets/img/uploads/" . $_POST['id'] . "/" . basename($_FILES["avatar"]["name"]);
-            uploadImage($target_dir, "avatar");
-
         }
 
         $title = $_POST['title'] ?: "Mr.";
@@ -99,7 +102,7 @@ if (isset($_GET['id'])) { ?>
 
 
         <ul class="breadcrumb">
-            <li><a href="/">Home</a></li>
+            <li><a href="./">Home</a></li>
             <li class="active">Edit <?php echo "- " . $data[$k]['fname'] . " " . $data[$k]['lname']; ?></li>
         </ul>
 

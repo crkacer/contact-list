@@ -20,18 +20,22 @@ if (isset($_POST['submit'])) {
     $comment = $_POST['comment'] ?: "";
 
     $currentTime = date('YmdGis');
-    $fileLocation = "/assets/img/default.png";
+    $fileLocation = "assets/img/default.png";
 
     if (file_exists($_FILES['avatar']['tmp_name'])) {
-
         // file exists
-        $target_dir = realpath(dirname(__FILE__)) . "/assets/img/uploads/" . $currentTime;
-        if (!file_exists($target_dir)) {
-            mkdir($target_dir, 0755, true);
+        $name = $_FILES["avatar"]["name"];
+        $ext = end((explode(".", $name)));
+        if ($ext == "png" || $ext == "jpg" || $ext == "jpeg" || $ext == "ico") {
+            $target_dir = realpath(dirname(__FILE__)) . "/assets/img/uploads/" . $currentTime;
+            if (!file_exists($target_dir)) {
+                mkdir($target_dir, 0755, true);
+            }
+            $target_file = $target_dir . "/" . basename($_FILES["avatar"]["name"]);
+            $fileLocation = "assets/img/uploads/" . $currentTime . "/" . basename($_FILES["avatar"]["name"]);
+            $okUpload = uploadImage($target_dir, "avatar");
         }
-        $target_file = $target_dir . "/" . basename($_FILES["avatar"]["name"]);
-        $fileLocation = "/assets/img/uploads/" . $currentTime . "/" . basename($_FILES["avatar"]["name"]);
-        $okUpload = uploadImage($target_dir, "avatar");
+
     }
 
     $okWrite = writeRecords([
@@ -56,7 +60,7 @@ if (isset($_POST['submit'])) {
 ?>
 <div class="container">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a></li>
+        <li><a href="./">Home</a></li>
         <li class="active">Add</li>
     </ul>
 
