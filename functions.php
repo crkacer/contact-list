@@ -9,19 +9,22 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-const FILE_NAME = "contacts.txt";
-define ('SITE_ROOT', realpath(dirname(__FILE__)));
+const FILE_NAME = "contact.txt";
+define('SITE_ROOT', realpath(dirname(__FILE__)));
 
-function readRecords()  {
+
+function readRecords()
+{
     if (!file_exists(FILE_NAME)) {
         touch(FILE_NAME);
         $file = fopen(FILE_NAME, 'r+');
+        file_put_contents(FILE_NAME, serialize([]));
         fclose($file);
         return [];
 
     } else {
-        $file = fopen(FILE_NAME, 'r+'); // handle is resource of steam
-        $content = fread($file, filesize(FILE_NAME)); // id is content of the file
+        $file = fopen(FILE_NAME, 'r+');
+        $content = fread($file, filesize(FILE_NAME));
 
         if ($file) {
             $arrData = unserialize($content);
@@ -31,7 +34,8 @@ function readRecords()  {
     }
 }
 
-function writeRecords($data) {
+function writeRecords($data)
+{
 
     if (!file_exists(FILE_NAME)) {
         touch(FILE_NAME);
@@ -42,10 +46,17 @@ function writeRecords($data) {
             array_push($arrContact, [
                 'id' => $data['id'],
                 'location' => (isset($data['location']) ? $data['location'] : ''),
-                'title' => (isset($data['title']) ? $data['title'] : ''),
-                'fname' => (isset($data['fname']) ? $data['fname'] : ''),
-                'lname' => (isset($data['lname']) ? $data['lname'] : ''),
-                'email' => (isset($data['email']) ? $data['email'] : '')
+                'title' => $data['title'],
+                'fname' => $data['fname'],
+                'lname' => $data['lname'],
+                'email' => $data['email'],
+                'site' => $data['site'],
+                'cell' => $data['cell'],
+                'home' => $data['home'],
+                'office' => $data['office'],
+                'twitter' => $data['twitter'],
+                'facebook' => $data['facebook'],
+                'comment' => $data['comment']
             ]);
 
             file_put_contents(FILE_NAME, serialize($arrContact));
@@ -55,8 +66,8 @@ function writeRecords($data) {
         }
 
     } else {
-        $file = fopen(FILE_NAME, 'r+'); // handle is resource of steam
-        $content = fread($file, filesize(FILE_NAME)); // id is content of the file
+        $file = fopen(FILE_NAME, 'r+');
+        $content = fread($file, filesize(FILE_NAME));
 
         if ($file) {
 
@@ -67,10 +78,17 @@ function writeRecords($data) {
             array_push($arrContact, [
                 'id' => $data['id'],
                 'location' => (isset($data['location']) ? $data['location'] : ''),
-                'title' => (isset($data['title']) ? $data['title'] : ''),
-                'fname' => (isset($data['fname']) ? $data['fname'] : ''),
-                'lname' => (isset($data['lname']) ? $data['lname'] : ''),
-                'email' => (isset($data['email']) ? $data['email'] : '')
+                'title' => $data['title'],
+                'fname' => $data['fname'],
+                'lname' => $data['lname'],
+                'email' => $data['email'],
+                'site' => $data['site'],
+                'cell' => $data['cell'],
+                'home' => $data['home'],
+                'office' => $data['office'],
+                'twitter' => $data['twitter'],
+                'facebook' => $data['facebook'],
+                'comment' => $data['comment']
             ]);
 
             file_put_contents(FILE_NAME, serialize($arrContact));
@@ -82,7 +100,8 @@ function writeRecords($data) {
 
 }
 
-function updateRecords($data) {
+function updateRecords($data)
+{
     if (!file_exists(FILE_NAME)) {
         return false;
 
@@ -99,20 +118,29 @@ function updateRecords($data) {
             $arrContact[$k]['lname'] = (isset($data['lname']) ? $data['lname'] : $arrContact[$k]['lname']);
             $arrContact[$k]['email'] = (isset($data['email']) ? $data['email'] : $arrContact[$k]['email']);
             $arrContact[$k]['title'] = (isset($data['title']) ? $data['title'] : $arrContact[$k]['title']);
+            $arrContact[$k]['site'] = (isset($data['site']) ? $data['site'] : $arrContact[$k]['site']);
+            $arrContact[$k]['cell'] = (isset($data['cell']) ? $data['cell'] : $arrContact[$k]['cell']);
+            $arrContact[$k]['home'] = (isset($data['home']) ? $data['home'] : $arrContact[$k]['home']);
+            $arrContact[$k]['office'] = (isset($data['office']) ? $data['office'] : $arrContact[$k]['office']);
+            $arrContact[$k]['twitter'] = (isset($data['twitter']) ? $data['twitter'] : $arrContact[$k]['twitter']);
+            $arrContact[$k]['facebook'] = (isset($data['facebook']) ? $data['facebook'] : $arrContact[$k]['facebook']);
+            $arrContact[$k]['comment'] = (isset($data['comment']) ? $data['comment'] : $arrContact[$k]['comment']);
 
             file_put_contents(FILE_NAME, serialize($arrContact));
             fclose($file);
+            header("Refresh:0");
             return true;
         }
     }
 }
 
-function uploadImage($dir, $file) {
+function uploadImage($dir, $file)
+{
 
     $target_dir = $dir . "/";
     $target_file = $target_dir . basename($_FILES[$file]["name"]);
 
-    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+    $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
     // Check if file already exists
     if (file_exists($target_file)) {
         unlink($target_file);
@@ -121,8 +149,7 @@ function uploadImage($dir, $file) {
 
     // Allow certain file formats
     $uploadOk = 1;
-    if($imageFileType != "png" && $imageFileType != "jpg" && $imageFileType != "jpeg"
-        && $imageFileType != "ico" ) {
+    if ($imageFileType != "png" && $imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "ico") {
 
         echo "Sorry, only PNG, JPG, JPEG, ICO files are allowed.";
 
@@ -146,7 +173,8 @@ function uploadImage($dir, $file) {
 
 }
 
-function deleteRecords($data) {
+function deleteRecords($data)
+{
     if (!file_exists(FILE_NAME)) {
         return false;
 
